@@ -1,0 +1,67 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+# Check https://python-poetry.org/docs/pyproject/ for all available sections
+name = "ansys-conceptev-core"
+version = "0.1.dev0"
+description = "A python wrapper for ansys conceptev core"
+license = "MIT"
+authors = ["ANSYS, Inc. <pyansys.core@ansys.com>"]
+maintainers = ["PyAnsys developers <pyansys.core@ansys.com>"]
+readme = "README.rst"
+repository = "https://github.com/ansys-internal/pyconceptev-core"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+packages = [
+    { include = "ansys", from = "src" },
+]
+
+[tool.poetry.dependencies]
+python = ">=3.11,<4.0"
+importlib-metadata = {version = "^4.0", python = "<3.8"}
+
+# Optional documentation dependencies
+[tool.poetry.group.doc]
+optional = true
+
+[tool.poetry.group.doc.dependencies]
+Sphinx = "^5.3.0"
+numpydoc = "^1.5.0"
+ansys-sphinx-theme = "^0.9.7"
+sphinx-copybutton = "^0.5.1"
+
+# Optional testing dependencies
+[tool.poetry.group.tests]
+optional = true
+[tool.poetry.group.tests.dependencies]
+pytest = "^7.3.0"
+pytest-cov = "^4.0.0"
+
+# Optional build requirements
+[tool.poetry.group.build]
+optional = true
+[tool.poetry.group.build.dependencies]
+build = "^0.10.0"
+twine = "^4.0.2"
+
+[tool.black]
+line-length = 100
+
+[tool.isort]
+profile = "black"
+force_sort_within_sections = true
+line_length = 100
+default_section = "THIRDPARTY"
+src_paths = ["doc", "src", "tests"]
+
+[tool.coverage.run]
+source = ["ansys.conceptev"]
+
+[tool.coverage.report]
+show_missing = true
