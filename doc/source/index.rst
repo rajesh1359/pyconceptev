@@ -16,7 +16,7 @@ You need to:
 - `Configure Session using .env file`
 - `Get a token`
 - `Create a client`
-- `Understand the API` at https://test.portal.com/conceptev/api/docs
+- `Understand the API` at https://dev-conceptev.awsansys3np.onscale.com/api/docs
 
 
 Configure Session using .env file
@@ -27,7 +27,7 @@ you need to create a .env file to keep your password and other configurable data
     CONCEPTEV_USERNAME = joe.blogs@my_work.com
     CONCEPTEV_PASSWORD = sup3r_s3cr3t_passw0rd
     OCM_URL = https://test.portal.onscale.com/api
-    CONCEPTEV_URL = https://test.portal.onscale.com/conceptev/api
+    CONCEPTEV_URL = https://dev-conceptev.awsansys3np.onscale.com/api
 
 
 Get a token
@@ -54,7 +54,7 @@ You need to create a client that can access and talk to the api. You can use the
 Understand the API
 ^^^^^^^^^^^^^^^^^^
 
-Use the api documentation at https://test.portal.onscale.com/conceptev/api/docs
+Use the api documentation at https://dev-conceptev.awsansys3np.onscale.com/api/docs
 This shows you which verbs and which routes/paths are available and what inputs/outputs they have.
 You can use the verb functions created in this module to make things simpler.
 

@@ -1,16 +1,17 @@
 import os
-from httpx._multipart import MultipartStream
+
 import pytest
 
 from ansys.conceptev.core import main
 from pytest_httpx import HTTPXMock
 import httpx
-from collections import namedtuple
 
 
+conceptev_url = os.environ['CONCEPTEV_URL']
+ocm_url = os.environ['OCM_URL']
 def test_get_token(httpx_mock: HTTPXMock):
     fake_token = "value1"
-    httpx_mock.add_response(url="https://test.portal.onscale.com/api/auth/login/",
+    httpx_mock.add_response(url=f"{ocm_url}/auth/login/",
                             method="post",
                             json={"accessToken": fake_token})
     token = main.get_token()
@@ -51,7 +52,7 @@ def test_processed_response():
 def test_get(httpx_mock: HTTPXMock, client: httpx.Client):
     example_results = [{"name": "aero_mock_response"}, {"name": "aero_mock_response2"}]
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/configurations?concept_id=123",
+        url=f"{conceptev_url}/configurations?concept_id=123",
         method="get",
 
         json=example_results)
@@ -63,7 +64,7 @@ def test_get(httpx_mock: HTTPXMock, client: httpx.Client):
 def test_post(httpx_mock: HTTPXMock, client: httpx.Client):
     example_aero = {"name": "aero_mock_response"}
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/configurations?concept_id=123",
+        url=f"{conceptev_url}/configurations?concept_id=123",
         method="post",
         match_json=example_aero,
         json=example_aero)
@@ -74,12 +75,12 @@ def test_post(httpx_mock: HTTPXMock, client: httpx.Client):
 
 def test_delete(httpx_mock: HTTPXMock, client: httpx.Client):
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/configurations/456?concept_id=123",
+        url=f"{conceptev_url}/configurations/456?concept_id=123",
         method="delete",
         status_code=204,
     )
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/configurations/489?concept_id=123",
+        url=f"{conceptev_url}/configurations/489?concept_id=123",
         method="delete",
         status_code=404,
     )
@@ -95,13 +96,13 @@ def test_create_new_project(httpx_mock: HTTPXMock, client: httpx.Client):
     project_id = "project_id_123"
     design_instance_id = "design_instance_123"
     mocked_concept = {"name": "new_mocked_concept"}
-    httpx_mock.add_response(url="https://test.portal.onscale.com/api/project/create",
+    httpx_mock.add_response(url=f"{ocm_url}/project/create",
                             json={"projectId": project_id})
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/api/design/instance/create",
+        url=f"{ocm_url}/design/instance/create",
         match_json={"projectId": project_id}, json={'id': design_instance_id})
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/concepts",
+        url=f"{conceptev_url}/concepts",
         method="post", match_json={"design_instance_id": design_instance_id},
         json=mocked_concept)
     value = main.create_new_project(client)
@@ -113,7 +114,7 @@ def test_get_concept_ids(httpx_mock: HTTPXMock, client: httpx.Client):
     mocked_concepts = [{"name": "start", "id": "1"}, {"name": "pie", "id": "3.17"},
                        {"name": "end", "id": "ragnorok"}]
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/concepts",
+        url=f"{conceptev_url}/concepts",
         method="get", json=mocked_concepts)
     returned_concepts = main.get_concept_ids(client)
     for concept in mocked_concepts:
@@ -126,7 +127,7 @@ def test_get_account_ids(httpx_mock: HTTPXMock):
         {"account": {"accountName": "account 1", "accountId": "al;kjasdf"}},
         {"account": {"accountName": "account 2", "accountId": "asdhalkjh"}}]
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/api/account/list",
+        url=f"{ocm_url}/account/list",
         method="post", headers={"authorization": token}, json=mocked_accounts,status_code=200)
     returned_account = main.get_account_ids(token)
     for account in mocked_accounts:
@@ -138,7 +139,7 @@ def test_get_default_hpc(httpx_mock: HTTPXMock):
     mocked_hpc = {"hpcId":"345"}
     token = "123"
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/api/account/hpc/default",
+        url=f"{ocm_url}/account/hpc/default",
         method="post", headers={"authorization": token}, match_json=mocked_account,json=mocked_hpc,status_code=200)
     hpc_id = main.get_default_hpc(token, mocked_account['accountId'])
     assert hpc_id == mocked_hpc['hpcId']
@@ -161,7 +162,7 @@ def test_create_submit_job(httpx_mock: HTTPXMock,client: httpx.Client):
     }
     mocked_job = ({"job":"data"}, {"stuff":"in file"})
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/jobs?concept_id=123",
+        url=f"{conceptev_url}/jobs?concept_id=123",
      match_json = job_input, json=mocked_job)
     mocked_info = "job info"
     mocked_job_start =  {
@@ -171,7 +172,7 @@ def test_create_submit_job(httpx_mock: HTTPXMock,client: httpx.Client):
         "hpc_id": hpc_id,
     }
     httpx_mock.add_response(
-        url="https://test.portal.onscale.com/conceptev/api/jobs:start?concept_id=123",
+        url=f"{conceptev_url}/jobs:start?concept_id=123",
      match_json = mocked_job_start, json=mocked_info)
     job_info = main.create_submit_job(client,concept, account_id,hpc_id,job_name)
     assert job_info == mocked_info
@@ -181,7 +182,7 @@ def test_put(httpx_mock: HTTPXMock, client: httpx.Client):
     example_aero = {"name": "aero_mock_response"}
     mocked_id = '345'
     httpx_mock.add_response(
-    url = f"https://test.portal.onscale.com/conceptev/api/configurations/{mocked_id}?concept_id=123",
+    url = f"{conceptev_url}/configurations/{mocked_id}?concept_id=123",
     method = "put",
     match_json = example_aero,
     json = example_aero)
@@ -202,7 +203,7 @@ def test_read_results(httpx_mock: HTTPXMock, client: httpx.Client):
     example_job_info = {"job": "mocked_job"}
     example_results = {"results":"returned"}
     httpx_mock.add_response(
-    url = f"https://test.portal.onscale.com/conceptev/api/jobs:result?concept_id=123",
+    url = f"{conceptev_url}/jobs:result?concept_id=123",
     method = "post",
     match_json = example_job_info,
     json = example_results)
@@ -218,7 +219,7 @@ def test_post_file(mocker, httpx_mock: HTTPXMock, client: httpx.Client):
 
     filename = "filename"
     params = {"param1":"one"}
-    httpx_mock.add_response(url = f"https://test.portal.onscale.com/conceptev/api/configurations:from_file?concept_id=123&param1=one",
+    httpx_mock.add_response(url = f"{conceptev_url}/configurations:from_file?concept_id=123&param1=one",
                             method="post",
                           json=file_post_response_data)
 
