@@ -201,6 +201,7 @@ if __name__ == '__main__':
                                   {"component_name": "e9",
                                    "component_file_type": "motor_lab_file"})
         print(created_motor)
+        client.timeout = 2000 # Needed as these calculations will take a long time.
         motor_loss_map = post(client, '/components:calculate_loss_map',
                               data=created_motor['id'])
         x = motor_loss_map['speeds']
@@ -217,9 +218,10 @@ if __name__ == '__main__':
                       params={"populated": True})
         accounts = get_account_ids(token)
         account_id = accounts["conceptev_saas@ansys.com"]
-        hpc_id = get_default_hpc(account_id)
+        hpc_id = get_default_hpc(token,account_id)
 
         job_info = create_submit_job(client,concept,hpc_id,account_id)
+        time.sleep(120) # Wait for the job to complete.
         results = read_results(client, job_info)
 
         x = results[0]['capability_curve']['speeds']
