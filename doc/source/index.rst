@@ -12,12 +12,33 @@ ConceptEV Specific Instructions
    Beware this api is in a state of rapid to change and should be considered unstable.
 
 
+
 You need to:
+- `Install the library`
 - `Configure Session using .env file`
 - `Get a token`
 - `Create a client`
 - `Understand the API` at https://dev-conceptev.awsansys3np.onscale.com/api/docs
 
+Install the library
+^^^^^^^^^^^^^
+
+#. Start by cloning this repository:
+
+   .. code:: bash
+
+      git clone https://github.com/ansys-internal/pyconceptev-core
+
+#. Install poetry:
+
+   .. code:: bash
+
+      pipx install poetry
+
+#. Install dependencies using poetry:
+   .. code:: bash
+
+    poetry install
 
 Configure Session using .env file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
