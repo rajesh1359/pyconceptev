@@ -7,7 +7,7 @@
 
 
 ConceptEV Specific Instructions
--------------
+-------------------------------
 .. WARNING::
    Beware this api is in a state of rapid to change and should be considered unstable.
 
@@ -20,7 +20,7 @@ You need to:
 
 
 Configure Session using .env file
-^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 you need to create a .env file to keep your password and other configurable data it should look something like this:
 .. code-block:: bash
