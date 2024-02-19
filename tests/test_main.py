@@ -22,8 +22,8 @@ def test_get_token(httpx_mock: HTTPXMock):
 @pytest.fixture
 def client():
     fake_token = "value1"
-    concept_id = "123"
-    client = main.get_http_client(fake_token, concept_id=concept_id)
+    design_instance_id = "123"
+    client = main.get_http_client(fake_token, design_instance_id=design_instance_id)
     return client
 
 
