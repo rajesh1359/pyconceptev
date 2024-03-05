@@ -29,7 +29,7 @@ Install the library
 
       git clone https://github.com/ansys-internal/pyconceptev-core
 
-#. Install poetry:
+#. Install poetry following your preferred route. See https://python-poetry.org/docs/#installation for example using pipx:
 
    .. code:: bash
 
@@ -39,6 +39,11 @@ Install the library
    .. code:: bash
 
       poetry install
+
+#. Activate the poetry environment:
+    .. code:: bash
+
+        poetry shell
 
 Configure Session using .env file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -59,7 +64,7 @@ Import the main module and use :code:`get_token` this should return a random str
 
 .. code-block:: python
 
-    import pyconceptev-core.main as pyconceptev #Test this
+    import ansys.conceptev.core.main as pyconceptev
     token = pyconceptev.get_token()
 
 
