@@ -60,7 +60,7 @@ def get_http_client(token: str, design_instance_id: str | None = None) -> httpx.
     re-creating that connection for each call.
     """
     base_url = os.environ["CONCEPTEV_URL"]
-    if concept_id:
+    if design_instance_id:
         params = {"design_instance_id": design_instance_id}
     else:
         params = None

@@ -29,12 +29,12 @@ def client():
 
 def test_get_http_client():
     fake_token = "value1"
-    concept_id = "123"
-    client = main.get_http_client(fake_token, concept_id=concept_id)
+    design_instance_id = "123"
+    client = main.get_http_client(fake_token, design_instance_id=design_instance_id)
     assert isinstance(client, httpx.Client)
     assert client.headers["authorization"] == fake_token
     assert str(client.base_url).strip("/") == os.environ["CONCEPTEV_URL"].strip("/")
-    assert client.params["concept_id"] == concept_id
+    assert client.params["design_instance_id"] == design_instance_id
 
 
 def test_processed_response():
@@ -53,7 +53,9 @@ def test_processed_response():
 def test_get(httpx_mock: HTTPXMock, client: httpx.Client):
     example_results = [{"name": "aero_mock_response"}, {"name": "aero_mock_response2"}]
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations?concept_id=123", method="get", json=example_results
+        url=f"{conceptev_url}/configurations?design_instance_id=123",
+        method="get",
+        json=example_results,
     )
 
     results = main.get(client, "/configurations")
@@ -63,7 +65,7 @@ def test_get(httpx_mock: HTTPXMock, client: httpx.Client):
 def test_post(httpx_mock: HTTPXMock, client: httpx.Client):
     example_aero = {"name": "aero_mock_response"}
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations?concept_id=123",
+        url=f"{conceptev_url}/configurations?design_instance_id=123",
         method="post",
         match_json=example_aero,
         json=example_aero,
@@ -75,12 +77,12 @@ def test_post(httpx_mock: HTTPXMock, client: httpx.Client):
 
 def test_delete(httpx_mock: HTTPXMock, client: httpx.Client):
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations/456?concept_id=123",
+        url=f"{conceptev_url}/configurations/456?design_instance_id=123",
         method="delete",
         status_code=204,
     )
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations/489?concept_id=123",
+        url=f"{conceptev_url}/configurations/489?design_instance_id=123",
         method="delete",
         status_code=404,
     )
@@ -220,7 +222,7 @@ def test_create_submit_job(httpx_mock: HTTPXMock, client: httpx.Client):
     }
     mocked_job = ({"job": "data"}, {"stuff": "in file"})
     httpx_mock.add_response(
-        url=f"{conceptev_url}/jobs?concept_id=123", match_json=job_input, json=mocked_job
+        url=f"{conceptev_url}/jobs?design_instance_id=123", match_json=job_input, json=mocked_job
     )
     mocked_info = "job info"
     mocked_job_start = {
@@ -230,7 +232,7 @@ def test_create_submit_job(httpx_mock: HTTPXMock, client: httpx.Client):
         "hpc_id": hpc_id,
     }
     httpx_mock.add_response(
-        url=f"{conceptev_url}/jobs:start?concept_id=123",
+        url=f"{conceptev_url}/jobs:start?design_instance_id=123",
         match_json=mocked_job_start,
         json=mocked_info,
     )
@@ -242,7 +244,7 @@ def test_put(httpx_mock: HTTPXMock, client: httpx.Client):
     example_aero = {"name": "aero_mock_response"}
     mocked_id = "345"
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations/{mocked_id}?concept_id=123",
+        url=f"{conceptev_url}/configurations/{mocked_id}?design_instance_id=123",
         method="put",
         match_json=example_aero,
         json=example_aero,
@@ -264,7 +266,7 @@ def test_read_results(httpx_mock: HTTPXMock, client: httpx.Client):
     example_job_info = {"job": "mocked_job"}
     example_results = {"results": "returned"}
     httpx_mock.add_response(
-        url=f"{conceptev_url}/jobs:result?concept_id=123",
+        url=f"{conceptev_url}/jobs:result?design_instance_id=123",
         method="post",
         match_json=example_job_info,
         json=example_results,
@@ -282,7 +284,7 @@ def test_post_file(mocker, httpx_mock: HTTPXMock, client: httpx.Client):
     filename = "filename"
     params = {"param1": "one"}
     httpx_mock.add_response(
-        url=f"{conceptev_url}/configurations:from_file?concept_id=123&param1=one",
+        url=f"{conceptev_url}/configurations:from_file?design_instance_id=123&param1=one",
         method="post",
         json=file_post_response_data,
     )
