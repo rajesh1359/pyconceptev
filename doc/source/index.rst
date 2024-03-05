@@ -29,13 +29,14 @@ Install the library
 
       git clone https://github.com/ansys-internal/pyconceptev-core
 
-#. Install poetry following your preferred route. See https://python-poetry.org/docs/#installation for example using `pipx`:
+#. Install poetry following your preferred route. See https://python-poetry.org/docs/#installation for example using :code:`pipx`:
 
    .. code:: bash
 
       pipx install poetry
 
 #. Install dependencies using poetry:
+
    .. code:: bash
 
       poetry install
