@@ -37,7 +37,7 @@ Install the library
       pipx install poetry
 
 #. Install dependencies using poetry:
-   
+
    .. code:: bash
 
     poetry install
@@ -46,7 +46,7 @@ Configure Session using .env file
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 you need to create a .env file to keep your password and other configurable data it should look something like this:
-    
+
 .. code-block:: bash
 
     CONCEPTEV_USERNAME = joe.blogs@my_work.com
@@ -71,7 +71,7 @@ Create a client
 You need to create a client that can access and talk to the API. You can use the health check API to check your connection.
 
 .. code-block:: python
-    
+
     import ansys.conceptev.core.main as pyconceptev
 
     with pyconceptev.create_client(token,concept_id) as client:
