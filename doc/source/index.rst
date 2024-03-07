@@ -9,7 +9,7 @@
 ConceptEV Specific Instructions
 -------------------------------
 .. WARNING::
-   Beware this api is in a state of rapid to change and should be considered unstable.
+   Beware this API is in a state of rapid to change and should be considered unstable.
 
 
 
@@ -57,7 +57,7 @@ you need to create a .env file to keep your password and other configurable data
 Get a token
 ^^^^^^^^^^^
 
-Import the main module and use get_token this should return a random string from the servers to get you access.
+Import the main module and use ``get_token``. This should return a random string from the servers to get you access.
 
 .. code-block:: python
 
@@ -68,7 +68,7 @@ Import the main module and use get_token this should return a random string from
 Create a client
 ^^^^^^^^^^^^^^^
 
-You need to create a client that can access and talk to the api. You can use the health check api to check your connection.
+You need to create a client that can access and talk to the API. You can use the health check API to check your connection.
 
 .. code-block:: python
     
@@ -80,7 +80,7 @@ You need to create a client that can access and talk to the api. You can use the
 Understand the API
 ^^^^^^^^^^^^^^^^^^
 
-Use the api documentation at https://dev-conceptev.awsansys3np.onscale.com/api/docs
+Use the API documentation at https://dev-conceptev.awsansys3np.onscale.com/api/docs
 This shows you which verbs and which routes/paths are available and what inputs/outputs they have.
 You can use the verb functions created in this module to make things simpler.
 
