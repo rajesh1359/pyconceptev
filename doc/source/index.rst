@@ -92,4 +92,3 @@ To create a configuration we need to use the verb `post` with route `/configurat
                                                         "drag_coefficient": 1,
                                                         "cross_sectional_area": 2,
                                                         "config_type": "aero"})
-
