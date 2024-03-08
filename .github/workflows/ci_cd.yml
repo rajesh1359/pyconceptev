@@ -67,10 +67,10 @@ jobs:
           pytest-extra-args: "--cov=ansys --cov-report=term --cov-report=html:.cov/html"
         env:
           CONCEPTEV_PASSWORD: ${{ secrets.CONCEPTEV_PASSWORD }}
-          CONCEPTEV_URL: ${{ secrets.CONCEPTEV_URL }}
-          CONCEPTEV_USERNAME: ${{ secrets.CONCEPTEV_USERNAME }}
-          OCM_URL: ${{ secrets.OCM_URL }}
-          POETRY_VIRTUALENVS_CREATE: ${{ secrets.POETRY_VIRTUALENVS_CREATE }}
+          CONCEPTEV_URL: ${{ env.CONCEPTEV_URL }}
+          CONCEPTEV_USERNAME: ${{ env.CONCEPTEV_USERNAME }}
+          OCM_URL: ${{ env.OCM_URL }}
+          POETRY_VIRTUALENVS_CREATE: ${{ env.POETRY_VIRTUALENVS_CREATE }}
 
   doc-build:
     name: "Build documentation"
