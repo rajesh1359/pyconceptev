@@ -65,6 +65,12 @@ jobs:
       - uses: ansys/actions/tests-pytest@v5
         with:
           pytest-extra-args: "--cov=ansys --cov-report=term --cov-report=html:.cov/html"
+        env:
+          CONCEPTEV_PASSWORD: ${{ secrets.CONCEPTEV_PASSWORD }}
+          CONCEPTEV_URL: ${{ secrets.CONCEPTEV_URL }}
+          CONCEPTEV_USERNAME: ${{ secrets.CONCEPTEV_USERNAME }}
+          OCM_URL: ${{ secrets.OCM_URL }}
+          POETRY_VIRTUALENVS_CREATE: ${{ secrets.POETRY_VIRTUALENVS_CREATE }}
 
   doc-build:
     name: "Build documentation"
