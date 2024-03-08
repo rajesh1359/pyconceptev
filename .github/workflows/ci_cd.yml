@@ -62,7 +62,7 @@ jobs:
        python-version: [3.8,3.9,3.10,3.11]
       fail-fast: false
     steps:
-      - uses: ansys/actions/tests-pytest@v5
+      - uses: philipjusher/actions/tests-pytest@patch-1
         with:
           pytest-extra-args: "--cov=ansys --cov-report=term --cov-report=html:.cov/html"
 
