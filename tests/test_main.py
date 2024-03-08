@@ -11,6 +11,9 @@ ocm_url = os.environ["OCM_URL"]
 
 
 def test_get_token(httpx_mock: HTTPXMock):
+    print(conceptev_url)
+    print(ocm_url)
+
     fake_token = "value1"
     httpx_mock.add_response(
         url=f"{ocm_url}/auth/login/", method="post", json={"accessToken": fake_token}
