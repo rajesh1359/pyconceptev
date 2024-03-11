@@ -43,7 +43,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: [3.8,3.9,3.10,3.11]
+        python-version: ["3.9","3.10","3.11"]
     steps:
       - uses: ansys/actions/build-wheelhouse@v5
         with:
@@ -59,12 +59,19 @@ jobs:
     strategy:
       matrix:
        os: [ubuntu-latest, windows-latest]
-       python-version: [3.8,3.9,3.10,3.11]
+       python-version: ["3.9","3.10","3.11"]
       fail-fast: false
     steps:
-      - uses: philipjusher/actions/tests-pytest@patch-1
+      - uses: ansys/actions/tests-pytest@v5
+        env:
+          CONCEPTEV_PASSWORD: ${{ secrets.CONCEPTEV_PASSWORD }}
+          CONCEPTEV_URL: ${{ vars.CONCEPTEV_URL }}
+          CONCEPTEV_USERNAME: ${{ vars.CONCEPTEV_USERNAME }}
+          OCM_URL: ${{ vars.OCM_URL }}
+          POETRY_VIRTUALENVS_CREATE: ${{ vars.POETRY_VIRTUALENVS_CREATE }}
         with:
           pytest-extra-args: "--cov=ansys --cov-report=term --cov-report=html:.cov/html"
+
 
   doc-build:
     name: "Build documentation"

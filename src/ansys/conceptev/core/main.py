@@ -53,15 +53,15 @@ def get_token() -> str:
     return response.json()["accessToken"]
 
 
-def get_http_client(token: str, concept_id: str | None = None) -> httpx.Client:
+def get_http_client(token: str, design_instance_id: str | None = None) -> httpx.Client:
     """Get a http client.
 
     This http client creates and maintains the connection and is more performant than
     re-creating that connection for each call.
     """
     base_url = os.environ["CONCEPTEV_URL"]
-    if concept_id:
-        params = {"concept_id": concept_id}
+    if design_instance_id:
+        params = {"design_instance_id": design_instance_id}
     else:
         params = None
     return httpx.Client(headers={"Authorization": token}, params=params, base_url=base_url)
