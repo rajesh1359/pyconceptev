@@ -1,24 +1,31 @@
 repos:
 
 - repo: https://github.com/psf/black
-  rev: 23.1.0
+  rev: 24.4.2  # IF VERSION CHANGES --> MODIFY "blacken-docs" MANUALLY AS WELL!!
   hooks:
   - id: black
 
+- repo: https://github.com/adamchainz/blacken-docs
+  rev: 1.16.0
+  hooks:
+  - id: blacken-docs
+    additional_dependencies: [black==24.4.2]
+
 - repo: https://github.com/pycqa/isort
-  rev: 5.12.0
+  rev: 5.13.2
   hooks:
   - id: isort
 
 - repo: https://github.com/PyCQA/flake8
-  rev: 6.0.0
+  rev: 7.0.0
   hooks:
   - id: flake8
 
 - repo: https://github.com/codespell-project/codespell
-  rev: v2.2.4
+  rev: v2.2.6
   hooks:
   - id: codespell
+    args: ["--ignore-words", "doc/styles/config/vocabularies/ANSYS/accept.txt", "-w"]
 
 - repo: https://github.com/pycqa/pydocstyle
   rev: 6.3.0
@@ -31,10 +38,23 @@ repos:
   rev: v4.4.0
   hooks:
   - id: check-merge-conflict
-  - id: requirements-txt-fixer
+  - id: check-yaml
   - id: trailing-whitespace
 
+- repo: https://github.com/ansys/pre-commit-hooks
+  rev: v0.3.1
+  hooks:
+    - id: add-license-headers
+      args:
+      - --start_year=2023
+
+# Validate the pre-commit.ci configuration
+- repo: https://github.com/pre-commit-ci/pre-commit-ci-config
+  rev: v1.6.1
+  hooks:
+  -   id: check-pre-commit-ci-config
+
 - repo: https://github.com/python-jsonschema/check-jsonschema
-  rev: 0.22.0
+  rev: 0.28.2
   hooks:
     - id: check-github-workflows

@@ -25,3 +25,7 @@
 - name: release
   description: Anything related to an incoming release
   color: ffffff
+
+- name: security
+  description: Anything related to security advisories
+  color: FF0000
