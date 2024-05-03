@@ -1,9 +1,10 @@
 # Contributors
 
-## Project Lead or Owner
+## Project Lead
 
-* [First Last]()
+* [Philip Usher](https://github.com/philipjusher)
 
 ## Individual Contributors
 
-* [First Last]()
+* [Sebastien Morais](https://github.com/SMoraisAnsys)
+
