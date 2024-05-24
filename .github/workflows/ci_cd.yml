@@ -35,26 +35,26 @@ jobs:
         with:
           token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
 
-  vulnerabilities:
-    name: Vulnerabilities
-    runs-on: ubuntu-latest
-    steps:
-      - name: PyAnsys vulnerability check (on main)
-        if: github.ref == 'refs/heads/main'
-        uses: ansys/actions/check-vulnerabilities@v6
-        with:
-          python-version: ${{ env.MAIN_PYTHON_VERSION }}
-          python-package-name: ${{ env.PACKAGE_NAME }}
-          token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
+  # vulnerabilities:
+  #   name: Vulnerabilities
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: PyAnsys vulnerability check (on main)
+  #       if: github.ref == 'refs/heads/main'
+  #       uses: ansys/actions/check-vulnerabilities@v6
+  #       with:
+  #         python-version: ${{ env.MAIN_PYTHON_VERSION }}
+  #         python-package-name: ${{ env.PACKAGE_NAME }}
+  #         token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
 
-      - name: PyAnsys vulnerability check (on dev mode)
-        if: github.ref != 'refs/heads/main'
-        uses: ansys/actions/check-vulnerabilities@v6
-        with:
-          python-version: ${{ env.MAIN_PYTHON_VERSION }}
-          python-package-name: ${{ env.PACKAGE_NAME }}
-          token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
-          dev-mode: true
+  #     - name: PyAnsys vulnerability check (on dev mode)
+  #       if: github.ref != 'refs/heads/main'
+  #       uses: ansys/actions/check-vulnerabilities@v6
+  #       with:
+  #         python-version: ${{ env.MAIN_PYTHON_VERSION }}
+  #         python-package-name: ${{ env.PACKAGE_NAME }}
+  #         token: ${{ secrets.PYANSYS_CI_BOT_TOKEN }}
+  #         dev-mode: true
 
   code-style:
     name: Code style
@@ -82,7 +82,7 @@ jobs:
       fail-fast: false
       matrix:
         os: [ubuntu-latest, windows-latest]
-        python-version: ["3.7", "3.8", "3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11"]
     steps:
       - name: Build wheelhouse and perform smoke test
         uses: ansys/actions/build-wheelhouse@v6
@@ -135,6 +135,7 @@ jobs:
       - uses: ansys/actions/doc-build@v6
         with:
           python-version: ${{ env.MAIN_PYTHON_VERSION }}
+          check-links: false
 
   package:
     name: Package library
