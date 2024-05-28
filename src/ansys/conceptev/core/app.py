@@ -74,15 +74,14 @@ def get_http_client(token: str, design_instance_id: str | None = None) -> httpx.
     re-creating this connection for each call.
     """
     base_url = os.environ["CONCEPTEV_URL"]
+    params = None
     if design_instance_id:
         params = {"design_instance_id": design_instance_id}
-    else:
-        params = None
     return httpx.Client(headers={"Authorization": token}, params=params, base_url=base_url)
 
 
-def processed_response(response) -> dict:
-    """Process response.
+def process_response(response) -> dict:
+    """Process a response.
 
     Check the value returned from the API and raise an error if the process is not successful.
     """
@@ -97,7 +96,7 @@ def processed_response(response) -> dict:
 def get(
     client: httpx.Client, router: Router, id: str | None = None, params: dict | None = None
 ) -> dict:
-    """Get/read from the client at the specific route.
+    """Send a GET request to the base client.
 
     This HTTP verb performs the ``GET`` request and adds the route to the base client.
     """
@@ -106,20 +105,20 @@ def get(
     else:
         path = router
     response = client.get(url=path, params=params)
-    return processed_response(response)
+    return process_response(response)
 
 
 def post(client: httpx.Client, router: Router, data: dict, params: dict = {}) -> dict:
-    """Post/create from the client at the specific route.
+    """Send a POST request to the base client.
 
     This HTTP verb performs the ``POST`` request and adds the route to the base client.
     """
     response = client.post(url=router, json=data, params=params)
-    return processed_response(response)
+    return process_response(response)
 
 
 def delete(client: httpx.Client, router: Router, id: str) -> dict:
-    """Delete from the client at the specific route.
+    """Send a DELETE request to the base client.
 
     This HTTP verb performs the ``DELETE`` request and adds the route to the base client.
     """
@@ -127,6 +126,16 @@ def delete(client: httpx.Client, router: Router, id: str) -> dict:
     response = client.delete(url=path)
     if response.status_code != 204:
         raise Exception(f"Failed to delete from {router} with ID:{id}.")
+
+
+def put(client: httpx.Client, router: Router, id: str, data: dict) -> dict:
+    """Put/update from the client at the specific route.
+
+    An HTTP verb that performs the ``PUT`` request and adds the route to the base client.
+    """
+    path = "/".join([router, id])
+    response = client.put(url=path, json=data)
+    return process_response(response)
 
 
 def create_new_project(
@@ -167,12 +176,12 @@ def create_new_project(
         osm_url + "/design/create", headers={"Authorization": token}, json=design_data
     )
 
-    if created_design.status_code != 200 and created_design.status_code != 204:
+    if created_design.status_code not in (200, 204):
         raise Exception(f"Failed to create a design on OCM {created_design.content}.")
 
     user_details = httpx.post(osm_url + "/user/details", headers={"Authorization": token})
-    if user_details.status_code != 200 and user_details.status_code != 204:
-        raise Exception(f"Failed to get user details {user_details}.")
+    if user_details.status_code not in (200, 204):
+        raise Exception(f"Failed to get a user details on OCM {user_details}.")
 
     concept_data = {
         "capabilities_ids": [],
@@ -250,16 +259,6 @@ def create_submit_job(
     return job_info
 
 
-def put(client: httpx.Client, router: Router, id: str, data: dict) -> dict:
-    """Put/update from the client at the specific route.
-
-    An HTTP verb that performs the ``PUT`` request and adds the route to the base client.
-    """
-    path = "/".join([router, id])
-    response = client.put(url=path, json=data)
-    return processed_response(response)
-
-
 def read_file(filename: str) -> str:
     """Read a given file."""
     with open(filename) as f:
@@ -274,9 +273,13 @@ def read_results(
     no_of_tries: int = 200,
     rate_limit: float = 0.3,
 ) -> dict:
-    """Keep trying for results. If results aren't completed, try again."""
+    """Read job results.
+
+    Continuously request job results until a valid response is received or a limit of tries is
+    reached.
+    """
     version_number = get(client, "/utilities:data_format_version")
-    for i in range(0, no_of_tries):
+    for _ in range(0, no_of_tries):
         response = client.post(
             url="/jobs:result",
             json=job_info,
@@ -293,7 +296,7 @@ def read_results(
 
 
 def post_component_file(client: httpx.Client, filename: str, component_file_type: str) -> dict:
-    """Post/create from the client at the specific route with a file.
+    """Send a POST request to the base client with a file.
 
     An HTTP verb that performs the ``POST`` request, adds the route to the base client,
     and then adds the file as a multipart form request.
@@ -303,7 +306,7 @@ def post_component_file(client: httpx.Client, filename: str, component_file_type
     response = client.post(
         url=path, files={"file": file_contents}, params={"component_file_type": component_file_type}
     )
-    return processed_response(response)
+    return process_response(response)
 
 
 if __name__ == "__main__":
