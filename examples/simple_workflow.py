@@ -20,8 +20,15 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-"""This example shows basic usage of PyConceptEV Core."""
+# # Simple workflow
+#
+# This example shows basic usage of PyConceptEV Core.
 
+# ## Perform required imports
+#
+# Perform required imports.
+
+# +
 import datetime
 import os
 from pathlib import Path
@@ -30,43 +37,63 @@ import plotly.graph_objects as go
 
 from ansys.conceptev.core import app
 
-# Setup required environment variables
+# -
+
+# ## Setup
+
+# Setup required environment variables.
+
+# +
 os.environ["CONCEPTEV_URL"] = "https://conceptev.ansys.com/api/"
 os.environ["OCM_URL"] = "https://prod.portal.onscale.com/api"
-os.environ["CONCEPTEV_USERNAME"] = "joe.blogs@my_work.com"
-os.environ["CONCEPTEV_PASSWORD"] = "sup3r_s3cr3t_passw0rd"
 
+# Set environment variables for ConceptEV username and password if they don't exist!
+if os.environ.get("CONCEPTEV_USERNAME") is None:
+    os.environ["CONCEPTEV_USERNAME"] = "joe.blogs@my_work.com"
+if os.environ.get("CONCEPTEV_PASSWORD") is None:
+    os.environ["CONCEPTEV_PASSWORD"] = "sup3r_s3cr3t_passw0rd"
+# -
+
+# +
 # Uncomment the following lines of code if you prefer to use local .env file
+#
 # import dotenv
 # dotenv.load_dotenv()
+# -
 
-# Various constant data
-DATADIR = Path(__file__).parents[0] / "resources"
-MOTOR_FILE_NAME = str(DATADIR.joinpath("e9.lab"))
-
+# ## Define example data
+#
 # Example data can be obtained from the schema sections of the API documentation.
+
+# +
+MOTOR_FILE_NAME = Path("resources") / "e9.lab"
+
 AERO_1 = {
     "name": "New Aero Config",
     "drag_coefficient": 0.3,
     "cross_sectional_area": 2,
     "config_type": "aero",
 }
+
 AERO_2 = {
     "name": "Second Aero Configuration",
     "drag_coefficient": 0.6,
     "cross_sectional_area": 3,
     "config_type": "aero",
 }
+
 MASS = {
     "name": "New Mass Config",
     "mass": 3000,
     "config_type": "mass",
 }
+
 WHEEL = {
     "name": "New Wheel Config",
     "rolling_radius": 0.3,
     "config_type": "wheel",
 }
+
 TRANSMISSION = {
     "gear_ratios": [5],
     "headline_efficiencies": [0.95],
@@ -77,6 +104,7 @@ TRANSMISSION = {
     "windage_ratios": [40],
     "component_type": "TransmissionLossCoefficients",
 }
+
 BATTERY = {
     "capacity": 86400000,
     "charge_acceptance_limit": 0,
@@ -88,37 +116,45 @@ BATTERY = {
     "voltage_min": 300,
 }
 
-# Motor data
 motor_data = {"name": "e9", "component_type": "MotorLabID", "inverter_losses_included": False}
+# -
 
-# Get a token from OCM
+# ## Use API client for the Ansys ConceptEV service
+
+# ### Get a token from OCM
+
 token = app.get_token()
-print(token)
 
-# Create a new project
+# ### Create a new project
 
 with app.get_http_client(token) as client:
     health = app.get(client, "/health")
-    print(f"API is healthy: {health}")
+    print(f"API is healthy: {health}\n")
 
     concepts = app.get(client, "/concepts")
-    print(f"List of concepts: {concepts}")
+    print(f"List of concepts: {concepts}\n")
 
     accounts = app.get_account_ids(token)
-    print(f"Account IDs: {accounts}")
+    # Uncomment to print accounts IDs
+    # print(f"Account IDs: {accounts}\n")
 
     account_id = accounts[os.environ["CONCEPTEV_USERNAME"]]
     hpc_id = app.get_default_hpc(token, account_id)
-    print(f"HPC ID: {hpc_id}")
+    # Uncomment to print HPC ID
+    # print(f"HPC ID: {hpc_id}\n")
 
     project = app.create_new_project(
         client, account_id, hpc_id, f"New Project +{datetime.datetime.now()}"
     )
     print(f"ID of the created project: {project['id']}")
 
+# ### Perform basic operations
+#
 # Perform basic operations on the design instance associated to the new project
 
+# +
 design_instance_id = project["design_instance_id"]
+
 with app.get_http_client(token, design_instance_id) as client:
 
     # Create configurations
@@ -129,11 +165,12 @@ with app.get_http_client(token, design_instance_id) as client:
 
     # Read all aero configurations
     configurations = app.get(client, "/configurations", params={"config_type": "aero"})
-    print(f"List of configurations: {configurations}")
+    # Uncomment to print configurations
+    # print(f"List of configurations: {configurations}\n")
 
     # Get a specific aero configuration
     aero = app.get(client, "/configurations", id=created_aero["id"])
-    print(f"First created areo configuration: {aero}")
+    print(f"First created areo configuration: {aero}\n")
 
     # Create component
     created_transmission = app.post(client, "/components", data=TRANSMISSION)
@@ -144,7 +181,7 @@ with app.get_http_client(token, design_instance_id) as client:
     motor_data["max_speed"] = motor_loss_map[1]
 
     created_motor = app.post(client, "/components", data=motor_data)
-    print(f"Created motor: {created_motor}")
+    print(f"Created motor: {created_motor}\n")
 
     # Extend client timeout to get loss map from the motor
     client.timeout = 2000
@@ -175,7 +212,7 @@ with app.get_http_client(token, design_instance_id) as client:
         "battery_id": created_battery["id"],
     }
     created_arch = app.post(client, "/architectures", data=architecture)
-    print(f"Created architecture: {created_arch}")
+    print(f"Created architecture: {created_arch}\n")
 
     # Create a requirement
     requirement = {
@@ -190,6 +227,11 @@ with app.get_http_client(token, design_instance_id) as client:
     }
     created_requirement = app.post(client, "requirements", data=requirement)
     print(f"Created requirement: {created_requirement}")
+# -
+
+# Submit a job and show the result
+
+with app.get_http_client(token, design_instance_id) as client:
 
     # Create and submit a job
     concept = app.get(client, "/concepts", id=design_instance_id, params={"populated": True})
