@@ -42,6 +42,8 @@ from ansys.conceptev.core import app
 # -
 
 # ## Set up environment variables
+# Preferred method is to use AnsysID. To do that comment the below username and password.
+# AND uncomment line 126.
 
 # Set environment variables for ConceptEV username and password if they don't exist!
 if os.environ.get("CONCEPTEV_USERNAME") is None:
