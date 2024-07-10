@@ -37,15 +37,11 @@ import plotly.graph_objects as go
 
 from ansys.conceptev.core import app
 
+# from ansys.conceptev.core import auth
+
 # -
 
 # ## Set up environment variables
-
-# Set up required environment variables.
-
-# +
-os.environ["CONCEPTEV_URL"] = "https://conceptev.ansys.com/api/"
-os.environ["OCM_URL"] = "https://prod.portal.onscale.com/api"
 
 # Set environment variables for ConceptEV username and password if they don't exist!
 if os.environ.get("CONCEPTEV_USERNAME") is None:
@@ -121,9 +117,12 @@ motor_data = {"name": "e9", "component_type": "MotorLabID", "inverter_losses_inc
 
 # ## Use API client for the Ansys ConceptEV service
 
-# ### Get a token from OCM
-
+# ### Get a token from OCM (Deprecated)
 token = app.get_token()
+
+# ### Get a token from Ansys ID (Preferred)
+# app = auth.create_msal_app()
+# token = auth.get_ansyId_token(app)
 
 # ### Create a project
 

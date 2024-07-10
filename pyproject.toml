@@ -39,6 +39,8 @@ python-dotenv = "^1.0.0"
 httpx = "^0.26.0"
 
 # Common packages for test and examples
+msal = "^1.29.0"
+msal-extensions = "^1.2.0"
 [tool.poetry.group.dev.dependencies]
 plotly = "^5.18.0"
 tox = "^4.15.1"

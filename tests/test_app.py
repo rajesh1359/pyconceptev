@@ -20,16 +20,14 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 
-import os
-
 import httpx
 import pytest
 from pytest_httpx import HTTPXMock
 
-from ansys.conceptev.core import app
+from ansys.conceptev.core import app, auth
 
-conceptev_url = os.environ["CONCEPTEV_URL"]
-ocm_url = os.environ["OCM_URL"]
+conceptev_url = auth.config["CONCEPTEV_URL"]
+ocm_url = auth.config["OCM_URL"]
 
 
 def test_get_token(httpx_mock: HTTPXMock):
@@ -58,7 +56,7 @@ def test_get_http_client():
     client = app.get_http_client(fake_token, design_instance_id=design_instance_id)
     assert isinstance(client, httpx.Client)
     assert client.headers["authorization"] == fake_token
-    assert str(client.base_url).strip("/") == os.environ["CONCEPTEV_URL"].strip("/")
+    assert str(client.base_url).strip("/") == conceptev_url.strip("/")
     assert client.params["design_instance_id"] == design_instance_id
 
 
