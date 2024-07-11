@@ -36,9 +36,15 @@ from msal_extensions import (
     FilePersistence,
     FilePersistenceWithDataProtection,
     KeychainPersistence,
-    LibsecretPersistence,
     token_cache,
 )
+
+try:
+    from msal_extensions import LibsecretPersistence
+
+    CACHE_LINUX_FILE = True
+except ImportError:
+    CACHE_LINUX_FILE = False
 
 file_directory = pathlib.Path(__file__).parent.resolve()
 
@@ -63,7 +69,7 @@ def build_persistence(location, fallback_to_plaintext=False):
         return FilePersistenceWithDataProtection(location)
     if sys.platform.startswith("darwin"):
         return KeychainPersistence(location, "conceptev_cli", "conceptev_cli_account")
-    if sys.platform.startswith("linux"):
+    if sys.platform.startswith("linux") and CACHE_LINUX_FILE:
         try:
             return LibsecretPersistence(
                 location,
@@ -74,6 +80,8 @@ def build_persistence(location, fallback_to_plaintext=False):
             if not fallback_to_plaintext:
                 raise
             logging.exception("Encryption unavailable. Opting in to plain text.")
+    if not CACHE_LINUX_FILE:
+        return FilePersistence(location)
     return FilePersistence(location)
 
 
