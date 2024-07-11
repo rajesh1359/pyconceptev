@@ -8,9 +8,9 @@ This section explains how to use PyConceptEV.
 Get a token using AnsysID
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Get a token by creating an msal app to communicate with the AnsysID system.
+Get a token by creating a MSAL (Microsoft Authentication Library) app to communicate with the AnsysID system.
 Use this app to create a token.
-The token will be cached within a file called `token_cache.bin`.
+The token is cached within a file called `token_cache.bin`.
 
 .. code-block:: python
 
@@ -34,7 +34,7 @@ the health check endpoint to check your connection.
        print(health)
 
 
-Configure a session using OnScale Cognito ID (deprecated)
+Configure a session using OnScale Cognito (deprecated)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Create an ``ENV`` file to keep your username and password.
@@ -46,7 +46,7 @@ The file should look like this:
    CONCEPTEV_PASSWORD = sup3r_s3cr3t_passw0rd
 
 
-Get a token using OCM Cognito (deprecated)
+Get a token using OnScale Cognito (deprecated)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Import the PyConceptEV core module and use the :code:`get_token()` method to get a

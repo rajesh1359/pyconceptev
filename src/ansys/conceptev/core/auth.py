@@ -25,7 +25,11 @@
 import logging
 import pathlib
 import sys
-import tomllib
+
+try:
+    import tomllib
+except ImportError:
+    import tomli as tomllib
 
 from msal import PublicClientApplication
 from msal_extensions import (
