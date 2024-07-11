@@ -47,7 +47,7 @@ The file should look like this:
 
 
 Get a token using OnScale Cognito (deprecated)
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Import the PyConceptEV core module and use the :code:`get_token()` method to get a
 a random access string from the server.
